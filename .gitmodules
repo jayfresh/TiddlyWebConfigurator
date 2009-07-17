@@ -1,0 +1,3 @@
+[submodule "wireit"]
+	path = wireit
+	url = git://github.com/neyric/wireit.git
