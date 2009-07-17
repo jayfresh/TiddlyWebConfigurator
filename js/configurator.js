@@ -109,3 +109,48 @@ function addEntity(obj, layer) {
 	YAHOO.util.Dom.addClass(el, obj.type);
 	return container;
 }
+
+function convertFromWorkingToTiddlyWeb() {
+	
+}
+
+function working2wiring(working) {
+	var wiring = {
+		nodes:{},
+		properties:{},
+		edges:[]
+	}; 
+	// modules -> nodes
+	var module = {};
+	var node = {};
+	for(var i=0;i<working.modules.length;i++) {
+		module = working.modules[i];
+		node = {};
+		if(WireIt.customFields.nodes[module.name].type) {
+			node.type = WireIt.customFields.nodes[module.name].type;
+		} else {
+			node.terminal = WireIt.customFields.nodes[module.name].terminal;
+		}
+		node.configuration = module.value;
+		node.wireItFields = module.config;
+		wiring.nodes[module.name] = node;
+	}
+	// properties -> properties
+	wiring.properties = working.properties;
+	// wires -> edges
+	var wire = {};
+	var edge = {};
+	for(i=0;i<working.wires.length;i++) {
+		edge = {
+			to: {},
+			from: {}
+		};
+		wire = working.wires[i];
+		edge.to.node = working.modules[wire.tgt.moduleId].name;
+		edge.to.channel = wire.tgt.terminal;
+		edge.from.node = working.modules[wire.src.moduleId].name;
+		edge.from.channel = wire.src.terminal;
+		wiring.edges.push(edge);
+	}
+	return wiring;
+}
