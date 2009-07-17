@@ -38,7 +38,9 @@ YAHOO.util.Event.onDOMReady(function() {
 
 function configure() {
 	var v = getValue(layer);
+	var tw = convertFromWorkingToTiddlyWeb(v);
 	console.log(v);
+	console.log(tw);
 }
 
 function addExtraInput(container,name) {
@@ -135,60 +137,56 @@ function convertFromWorkingToTiddlyWeb(working) {
 		bags: {},
 		recipes: {}
 	};
-	// modules -> bags, recipes
-	var module = {};
-	var node = {};
-	for(var i=0;i<working.modules.length;i++) {
-		module = working.modules[i];
-		node = {};
-		if(WireIt.customFields.nodes[module.name].type) {
-			node.type = WireIt.customFields.nodes[module.name].type;
-		} else {
-			node.terminal = WireIt.customFields.nodes[module.name].terminal;
-		}
-		node.configuration = module.value;
-		node.wireItFields = module.config;
-		wiring.nodes[module.name] = node;
-	}
-}
-
-function working2wiring(working) {
-	var wiring = {
-		nodes:{},
-		properties:{},
-		edges:[]
-	};
 	// modules -> nodes
 	var module = {};
-	var node = {};
+	var nodes = {};
 	for(var i=0;i<working.modules.length;i++) {
 		module = working.modules[i];
-		node = {};
-		if(WireIt.customFields.nodes[module.name].type) {
-			node.type = WireIt.customFields.nodes[module.name].type;
-		} else {
-			node.terminal = WireIt.customFields.nodes[module.name].terminal;
-		}
-		node.configuration = module.value;
-		node.wireItFields = module.config;
-		wiring.nodes[module.name] = node;
+		name = module.name;
+		nodes[name] = {
+			type:module.type,
+			inputs:{},
+			outputs:{}
+		};
 	}
-	// properties -> properties
-	wiring.properties = working.properties;
 	// wires -> edges
 	var wire = {};
-	var edge = {};
+	var to_node, to_channel, from_node, from_channel;
 	for(i=0;i<working.wires.length;i++) {
-		edge = {
-			to: {},
-			from: {}
-		};
 		wire = working.wires[i];
-		edge.to.node = working.modules[wire.tgt.moduleId].name;
-		edge.to.channel = wire.tgt.terminal;
-		edge.from.node = working.modules[wire.src.moduleId].name;
-		edge.from.channel = wire.src.terminal;
-		wiring.edges.push(edge);
+		to_node = working.modules[wire.tgt.moduleId].name;
+		to_channel = wire.tgt.terminal;
+		from_node = working.modules[wire.src.moduleId].name;
+		from_channel = wire.src.terminal;
+		nodes[to_node].inputs[to_channel] = nodes[from_node];
 	}
-	return wiring;
+	// nodes -> bags, recipes
+	var node;
+	var bag, recipe;
+	for(i in nodes) {
+		node = nodes[i];
+		switch(node.type) {
+			case "bag":
+				bag = {};
+				// for each role attached to my various terminals, push the name into the appropriate property's array
+				/*
+					"write": ["GUEST",...],
+					"create": ["GUEST",...],
+					"delete": ["GUEST",...],
+					"manage": ["GUEST",...],
+					"accept": ["GUEST",...]
+				*/
+				
+				tiddlyweb.bags[name] = bag;
+				break;
+			case "recipe":
+				recipe = [];
+				// for each bag connected to me, push the name into recipe
+				for(var j=0; j<node.inputs.length; j++) {
+					
+				}
+				tiddlyweb.recipes[name] = recipe;
+				break;
+		}
+	}
 }
