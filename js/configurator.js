@@ -158,13 +158,17 @@ function convertFromWorkingToTiddlyWeb(working) {
 		to_channel = wire.tgt.terminal;
 		from_node = working.modules[wire.src.moduleId].name;
 		from_channel = wire.src.terminal;
-		nodes[to_node].inputs[to_channel] = nodes[from_node];
+		if(!nodes[to_node].inputs[to_channel]) {
+			nodes[to_node].inputs[to_channel] = [];
+		}
+		nodes[to_node].inputs[to_channel].push(from_node);
 	}
 	// nodes -> bags, recipes
 	var node;
 	var bag, recipe;
 	for(i in nodes) {
 		node = nodes[i];
+		var j;
 		switch(node.type) {
 			case "bag":
 				bag = {};
@@ -176,14 +180,18 @@ function convertFromWorkingToTiddlyWeb(working) {
 					"manage": ["GUEST",...],
 					"accept": ["GUEST",...]
 				*/
-				
+				for(j in node.inputs) {
+					bag[j] = node.inputs[j];
+				}
 				tiddlyweb.bags[name] = bag;
 				break;
 			case "recipe":
 				recipe = [];
 				// for each bag connected to me, push the name into recipe
-				for(var j=0; j<node.inputs.length; j++) {
-					
+				for(j in node.inputs) {
+					for(var k=0; k<node.inputs[j].length; k++) {
+						recipe.push(node.inputs[j][k]);	
+					}
 				}
 				tiddlyweb.recipes[name] = recipe;
 				break;
