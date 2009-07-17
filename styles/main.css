@@ -1,11 +1,14 @@
 #wrapper {
-	height: 600px;
-	width: 800px;
+	width: 80%;
 	margin: 0 auto;
 }
 
 div.WireIt-Layer {
 	overflow: auto;
+}
+
+div.bag div.body {
+	background-color: #F8F8F8;
 }
 
 div.recipe div.body {
