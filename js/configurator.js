@@ -1,28 +1,9 @@
 var layer = null;
 
-// mainly nicked from WiringEditor
-function getValue(layer) {
-   var i;
-   var obj = {modules: [], wires: []};
-   for (i=0; i<layer.containers.length; i++) {
-      obj.modules.push( {name: layer.containers[i].options.title, type: layer.containers[i].type, value: layer.containers[i].getValue(), config: layer.containers[i].getConfig()});
-   }
-   for(i=0; i<layer.wires.length; i++) {
-      var wire = layer.wires[i];
-      var wireObj = {
-         src: {moduleId: WireIt.indexOf(wire.terminal1.container, layer.containers), terminal: wire.terminal1.options.name},
-         tgt: {moduleId: WireIt.indexOf(wire.terminal2.container, layer.containers), terminal: wire.terminal2.options.name}
-      };
-      obj.wires.push(wireObj);
-   }
-   return {
-      working: obj
-   };
-}
-
 function configure() {
 	var v = getValue(layer);
-	var tw = convertFromWorkingToTiddlyWeb(v);
+	console.log(v);
+	var tw = convertFromWorkingToTiddlyWeb(v.working);
 	console.log(v);
 	console.log(tw);
 }
@@ -45,6 +26,7 @@ function addExtraTerminal(container,name,type) {
 	}
 	var i = container.terminals.length;
 	var notType = type === "output" ? "input" : "output";
+	var alwaysSrc = type === "output" ? false : true;
 	var direction = type === "output" ? [-1,0] : [1,0];
 	var align = type === "output" ? "right" : "left";
 	var offsetPosition = {};
@@ -58,7 +40,7 @@ function addExtraTerminal(container,name,type) {
 			"type": type,
 			"allowedTypes": [notType]
 		},
-		"alwaysSrc": true
+		"alwaysSrc": alwaysSrc
 	});
 	container.bodyEl.appendChild(WireIt.cn('div', null, {lineHeight: "30px", textAlign: align}, name));
 	container.addTerminal(container.options.terminals[container.options.terminals.length-1]);
@@ -103,6 +85,27 @@ function addEntity(obj, layer) {
 	return container;
 }
 
+// mainly nicked from WiringEditor
+function getValue(layer) {
+	var i;
+	var obj = {modules: [], wires: []};
+	for (i=0; i<layer.containers.length; i++) {
+		obj.modules.push( {name: layer.containers[i].options.title, type: layer.containers[i].type, value: layer.containers[i].getValue(), config: layer.containers[i].getConfig()});
+	}
+	console.log('the wires',layer.wires);
+	for(i=0; i<layer.wires.length; i++) {
+		var wire = layer.wires[i];
+		var wireObj = {
+			src: {moduleId: WireIt.indexOf(wire.terminal1.container, layer.containers), terminal: wire.terminal1.options.name},
+			tgt: {moduleId: WireIt.indexOf(wire.terminal2.container, layer.containers), terminal: wire.terminal2.options.name}
+		};
+		obj.wires.push(wireObj);
+	}
+	return {
+		working: obj
+	};
+}
+
 /*
 A bag is:
 bagName: {
@@ -117,10 +120,6 @@ A recipe is:
 recipeName: ["bag A","bag B",...]
 */
 function convertFromWorkingToTiddlyWeb(working) {
-	var tiddlyweb = {
-		bags: {},
-		recipes: {}
-	};
 	// modules -> nodes
 	var module = {};
 	var nodes = {};
@@ -147,7 +146,12 @@ function convertFromWorkingToTiddlyWeb(working) {
 		}
 		nodes[to_node].inputs[to_channel].push(from_node);
 	}
+	console.log('nodes with wires',nodes);
 	// nodes -> bags, recipes
+	var tiddlyweb = {
+		bags: {},
+		recipes: {}
+	};
 	var node;
 	var bag, recipe;
 	for(i in nodes) {
@@ -181,4 +185,5 @@ function convertFromWorkingToTiddlyWeb(working) {
 				break;
 		}
 	}
+	return tiddlyweb;
 }
