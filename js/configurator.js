@@ -3,7 +3,7 @@ var layer = null;
 function configure() {
 	var v = getValue(layer);
 	var tw = convertFromWorkingToTiddlyWeb(v.working);
-	console.log(tw);
+	tiddlyweb.saveEntities(tw);
 }
 
 function addExtraInput(container,name) {
