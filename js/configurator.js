@@ -63,8 +63,8 @@ function addExtraTerminal(container,name,type) {
 		"name": name,
 		"direction": direction,
 		"offsetPosition": offsetPosition,
-		"ddConfig": {              
-			"type": type,              	
+		"ddConfig": {
+			"type": type,
 			"allowedTypes": [notType]
 		},
 		"alwaysSrc": true
@@ -96,9 +96,10 @@ function addRecipe(recipe, layer) {
 function addEntity(obj, layer) {
 	var x = obj.pos_x || 0;
 	var y = obj.pos_y || 0;
+	var permissions = ["write", "create", "delete", "manage", "accept"];
 	var container = {
 		xtype: "WireIt.InOutContainer",
-		inputs: ["write", "create", "delete", "manage", "accept"],
+		inputs: obj.type == "bag" ? permissions : ["tiddlers"],
 		outputs: [obj.type == "bag" ? "tiddlers" : "document"],
 		title: obj.name,
 		position: [x, y]
@@ -111,7 +112,7 @@ function addEntity(obj, layer) {
 }
 
 function convertFromWorkingToTiddlyWeb() {
-	
+
 }
 
 function working2wiring(working) {
@@ -119,7 +120,7 @@ function working2wiring(working) {
 		nodes:{},
 		properties:{},
 		edges:[]
-	}; 
+	};
 	// modules -> nodes
 	var module = {};
 	var node = {};
