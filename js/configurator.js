@@ -23,9 +23,13 @@ YAHOO.util.Event.onDOMReady(function() {
 	try { // XXX: DEBUG
 		var canvas = document.getElementById("canvas"); // TODO: use YUI selector?
 		layer = new WireIt.Layer({ parentEl: canvas });
-		addBag({ name: "Foo" }, layer);
-		addBag({ name: "Bar" }, layer);
-		addRecipe({ name: "Baz" }, layer);
+		addBag({ name: "public" }, layer);
+		addBag({ name: "editors" }, layer);
+		addBag({ name: "system" }, layer);
+		addBag({ name: "team" }, layer);
+		addRecipe({ name: "website" }, layer);
+		addRecipe({ name: "CMS" }, layer);
+		addRecipe({ name: "wiki" }, layer);
 		layer.initContainers();
 	} catch(e) {
 		console.log(e);
@@ -59,7 +63,7 @@ function addExtraTerminal(container,name,type) {
 	var align = type === "output" ? "right" : "left";
 	var offsetPosition = {};
 	offsetPosition[align] = -14;
-	offsetPosition["top"] = 3+30*(i+1);
+	offsetPosition.top = 3+30*(i+1);
 	container.options.terminals.push({
 		"name": name,
 		"direction": direction,
