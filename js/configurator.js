@@ -2,9 +2,7 @@ var layer = null;
 
 function configure() {
 	var v = getValue(layer);
-	console.log(v);
 	var tw = convertFromWorkingToTiddlyWeb(v.working);
-	console.log(v);
 	console.log(tw);
 }
 
@@ -26,7 +24,7 @@ function addExtraTerminal(container,name,type) {
 	}
 	var i = container.terminals.length;
 	var notType = type === "output" ? "input" : "output";
-	var alwaysSrc = type === "output" ? false : true;
+	var alwaysSrc = type === "output" ? true : false;
 	var direction = type === "output" ? [-1,0] : [1,0];
 	var align = type === "output" ? "right" : "left";
 	var offsetPosition = {};
@@ -92,7 +90,6 @@ function getValue(layer) {
 	for (i=0; i<layer.containers.length; i++) {
 		obj.modules.push( {name: layer.containers[i].options.title, type: layer.containers[i].type, value: layer.containers[i].getValue(), config: layer.containers[i].getConfig()});
 	}
-	console.log('the wires',layer.wires);
 	for(i=0; i<layer.wires.length; i++) {
 		var wire = layer.wires[i];
 		var wireObj = {
@@ -145,6 +142,10 @@ function convertFromWorkingToTiddlyWeb(working) {
 			nodes[to_node].inputs[to_channel] = [];
 		}
 		nodes[to_node].inputs[to_channel].push(from_node);
+		if(!nodes[from_node].outputs[from_channel]) {
+			nodes[from_node].outputs[from_channel] = [];
+		}
+		nodes[from_node].outputs[from_channel].push(to_node);
 	}
 	console.log('nodes with wires',nodes);
 	// nodes -> bags, recipes
@@ -171,7 +172,7 @@ function convertFromWorkingToTiddlyWeb(working) {
 				for(j in node.inputs) {
 					bag[j] = node.inputs[j];
 				}
-				tiddlyweb.bags[name] = bag;
+				tiddlyweb.bags[i] = bag;
 				break;
 			case "recipe":
 				recipe = [];
@@ -181,7 +182,7 @@ function convertFromWorkingToTiddlyWeb(working) {
 						recipe.push(node.inputs[j][k]);	
 					}
 				}
-				tiddlyweb.recipes[name] = recipe;
+				tiddlyweb.recipes[i] = recipe;
 				break;
 		}
 	}
