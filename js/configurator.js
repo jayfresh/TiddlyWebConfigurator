@@ -99,12 +99,10 @@ function addEntity(obj, layer) {
 	var container = {
 		xtype: "WireIt.InOutContainer",
 		inputs: ["write", "create", "delete", "manage", "accept"],
+		outputs: [obj.type == "bag" ? "tiddlers" : "document"],
 		title: obj.name,
 		position: [x, y]
 	};
-	if(obj.type = "bag") {
-		container.outputs = ["tiddlers"];
-	}
 	container = layer.addContainer(container);
 	var el = container.el;
 	el.title = obj.desc || ""; // XXX: don't use title? -- XXX: use setAttribute?
