@@ -3,7 +3,7 @@ function getValue(layer) {
    var i;
    var obj = {modules: [], wires: []};
    for (i=0; i<layer.containers.length; i++) {
-      obj.modules.push( {name: layer.containers[i].options.title, value: layer.containers[i].getValue(), config: layer.containers[i].getConfig()});
+      obj.modules.push( {name: layer.containers[i].options.title, type: layer.containers[i].type, value: layer.containers[i].getValue(), config: layer.containers[i].getConfig()});
    }
    for(i=0; i<layer.wires.length; i++) {
       var wire = layer.wires[i];
@@ -18,10 +18,11 @@ function getValue(layer) {
    };
 }
 
+var layer = null;
 YAHOO.util.Event.onDOMReady(function() {
 	try { // XXX: DEBUG
 		var canvas = document.getElementById("canvas"); // TODO: use YUI selector?
-		var layer = new WireIt.Layer({ parentEl: canvas });
+		layer = new WireIt.Layer({ parentEl: canvas });
 		addBag({ name: "Foo" }, layer);
 		addBag({ name: "Bar" }, layer);
 		addRecipe({ name: "Baz" }, layer);
@@ -105,14 +106,46 @@ function addEntity(obj, layer) {
 		position: [x, y]
 	};
 	container = layer.addContainer(container);
+	container.type = obj.type;
 	var el = container.el;
 	el.title = obj.desc || ""; // XXX: don't use title? -- XXX: use setAttribute?
 	YAHOO.util.Dom.addClass(el, obj.type);
 	return container;
 }
 
-function convertFromWorkingToTiddlyWeb() {
+/*
+A bag is:
+bagName: {
+	write: ["GUEST",...],
+	create: ["GUEST",...],
+	delete: ["GUEST",...],
+	manage: ["GUEST",...],
+	accept: ["GUEST",...]
+}
 
+A recipe is:
+recipeName: ["bag A","bag B",...]
+*/
+function convertFromWorkingToTiddlyWeb(working) {
+	var tiddlyweb = {
+		bags: {},
+		recipes: {}
+	};
+	// modules -> bags, recipes
+	var module = {};
+	var node = {};
+	for(var i=0;i<working.modules.length;i++) {
+		module = working.modules[i];
+		node = {};
+		if(WireIt.customFields.nodes[module.name].type) {
+			node.type = WireIt.customFields.nodes[module.name].type;
+		} else {
+			node.terminal = WireIt.customFields.nodes[module.name].terminal;
+		}
+		node.configuration = module.value;
+		node.wireItFields = module.config;
+		wiring.nodes[module.name] = node;
+	}
 }
 
 function working2wiring(working) {
