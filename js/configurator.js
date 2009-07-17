@@ -41,10 +41,46 @@ YAHOO.util.Event.onDOMReady( function() {
 		title: "test2",
 		position: [100, 100]
 	});
-	layer.initContainers();
 });
 
 function configure() {
 	var v = getValue(layer);
 	console.log(v);
+}
+
+function addExtraInput(container,name) {
+	addExtraTerminal(container,name,"input");
+}
+
+function addExtraOutput(container,name) {
+	addExtraTerminal(container,name,"output");
+}
+
+// defaults to adding an input
+function addExtraTerminal(container,name,type) {
+	if(type!=="input" && type!=="output") {
+		return false;
+	}
+	if(!name) {
+		return false;
+	}
+	var i = container.terminals.length;
+	var notType = type === "output" ? "input" : "output";
+	var direction = type === "output" ? [-1,0] : [1,0];
+	var align = type === "output" ? "right" : "left";
+	var offsetPosition = {};
+	offsetPosition[align] = -14;
+	offsetPosition["top"] = 3+30*(i+1);
+	container.options.terminals.push({
+		"name": name,
+		"direction": direction,
+		"offsetPosition": offsetPosition,
+		"ddConfig": {              
+			"type": type,              	
+			"allowedTypes": [notType]
+		},
+		"alwaysSrc": true
+	});
+	container.bodyEl.appendChild(WireIt.cn('div', null, {lineHeight: "30px", textAlign: align}, name));
+	container.addTerminal(container.options.terminals[container.options.terminals.length-1]);
 }
