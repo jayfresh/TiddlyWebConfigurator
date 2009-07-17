@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
 <html>
 	<head>
 		<title>TiddlyWeb Configurator proof of concept</title>
@@ -23,11 +23,25 @@
 		<script type="text/javascript" src="wireit/js/Container.js"></script>
 		<script type="text/javascript" src="wireit/js/Layer.js"></script>
 		<script type="text/javascript" src="wireit/js/Layout.js"></script>
+		<script type="text/javascript" src="wireit/js/InOutContainer.js"></script>
 		
 		<link rel="stylesheet" type="text/css" href="wireit/css/WireIt.css" />
+		<style>
+			#wrapper {
+				height:600px;
+				width:800px;
+				margin:auto;
+			}
+			div.WireIt-Layer {
+				overflow:auto;
+			}
+		</style>
 		<script type="text/javascript" language="JavaScript" src="js/configurator.js"></script>
-	</head>
+			</head>
 	<body>
-		
+		<div id="wrapper">
+			<div id="canvas"></div>
+			<button onclick="configure();">Go configure!</button>
+		</div>
 	</body>
 </html>
