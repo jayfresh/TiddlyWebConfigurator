@@ -1,7 +1,6 @@
 var tiddlyweb = {
-	host: "http://localhost:8080" // XXX: DEBUG
+	host: "http://localhost:8080" // XXX: hardcoded
 };
-
 
 (function() {
 
@@ -38,7 +37,9 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 			for(var i = 0; i < data.recipe.length; i++) { // TODO: error handling
 				bags.push(data.recipe[i][0]);
 			}
-			callback(bags);
+			var recipe = {};
+			recipe[name] = bags;
+			callback(recipe);
 		};
 		loadData(uri, _callback);
 	},
