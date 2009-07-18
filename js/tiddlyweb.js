@@ -1,69 +1,57 @@
-/*
-A bag is:
-bagName: {
-	write: ["GUEST",...],
-	create: ["GUEST",...],
-	delete: ["GUEST",...],
-	manage: ["GUEST",...],
-	accept: ["GUEST",...]
-}
-
-A recipe is:
-recipeName: ["bag A","bag B",...]
-*/
-
-var tiddlyweb = {};
+var tiddlyweb;
 
 (function($) {
 
 var host = "http://localhost:8080"; // XXX: hardcoded
 
-tiddlyweb.saveEntities = function(obj) {
-	tiddlyweb.saveBags(obj.bags);
-	tiddlyweb.saveRecipes(obj.recipes);
-};
+tiddlyweb = {
+	saveEntities: function(obj) {
+		for(var bag in obj.bags) {
+			this.saveBag(bag, obj.bags[bag]);
+		}
+		for(var recipe in obj.recipes) {
+			this.saveRecipe(recipe, obj.recipes[recipe]);
+		}
+	},
 
-tiddlyweb.saveBags = function(bags) {
-	for(var bag in bags) {
-		tiddlyweb.saveBag(bag, bags[bag]);
+	/*
+	 * policy is an object with members write, create, delete, manage and accept,
+	 * each an array of users/roles
+	 */
+	saveBag: function(name, policy) {
+		var uri = host + "/bags/" + encodeURIComponent(name);
+		var data = {
+			policy: policy
+		};
+		$.localAjax({
+			url: uri,
+			type: "PUT",
+			dataType: "json",
+			data: YAHOO.lang.JSON.stringify(data),
+			complete: console.log // DEBUG
+		});
+	},
+
+	/*
+	 * bags is an array of bag names
+	 * filters currently unsupported
+	 */
+	saveRecipe: function(name, bags) {
+		var uri = host + "/recipes/" + encodeURIComponent(name);
+		var data = {
+			recipe: []
+		};
+		for(var i = 0; i < bags.length; i++) {
+			data.recipe.push([bags[i], ""]);
+		}
+		$.localAjax({
+			url: uri,
+			type: "PUT",
+			dataType: "json",
+			data: YAHOO.lang.JSON.stringify(data),
+			complete: console.log // DEBUG
+		});
 	}
-};
-
-tiddlyweb.saveRecipes = function(recipes) {
-	for(var recipe in recipes) {
-		tiddlyweb.saveRecipe(recipe, recipes[recipe]);
-	}
-};
-
-tiddlyweb.saveBag = function(name, policy) {
-	var uri = host + "/bags/" + encodeURIComponent(name);
-	var data = {
-		policy: policy
-	};
-	$.localAjax({
-		url: uri,
-		type: "PUT",
-		dataType: "json",
-		data: YAHOO.lang.JSON.stringify(data),
-		complete: console.log // DEBUG
-	});
-};
-
-tiddlyweb.saveRecipe = function(name, bags) {
-	var uri = host + "/recipes/" + encodeURIComponent(name);
-	var data = {
-		recipe: []
-	};
-	for(var i = 0; i < bags.length; i++) {
-		data.recipe.push([bags[i], ""]);
-	}
-	$.localAjax({
-		url: uri,
-		type: "PUT",
-		dataType: "json",
-		data: YAHOO.lang.JSON.stringify(data),
-		complete: console.log // DEBUG
-	});
 };
 
 /*
