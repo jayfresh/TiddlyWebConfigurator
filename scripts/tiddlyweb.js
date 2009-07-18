@@ -102,7 +102,7 @@ var localAjax = function(args) { // XXX: not required!?
 		window.netscape.security.PrivilegeManager.
 			enablePrivilege("UniversalBrowserRead");
 	}
-	return jQuery.ajax(args); // TODO: use YUI
+	return jQuery.ajax(args); // TODO: use YAHOO.util.Connect.asyncRequest
 };
 
 })();

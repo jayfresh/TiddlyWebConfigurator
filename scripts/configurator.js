@@ -45,22 +45,12 @@ function addExtraTerminal(container,name,type) {
 }
 
 function addBag(bag, layer) {
-	bag = {
-		type: "bag",
-		name: bag.name,
-		pos_x: bag.pos_x,
-		pos_y: bag.pos_y
-	}; // TODO: merge recipe object into { type: "bag" }
+	bag = YAHOO.lang.merge(bag, { type: "bag" });
 	return addEntity(bag, layer);
 }
 
 function addRecipe(recipe, layer) {
-	recipe = {
-		type: "recipe",
-		name: recipe.name,
-		pos_x: recipe.pos_x,
-		pos_y: recipe.pos_y
-	}; // TODO: merge recipe object into { type: "recipe" }
+	recipe = YAHOO.lang.merge(recipe, { type: "recipe" });
 	return addEntity(recipe, layer);
 }
 
