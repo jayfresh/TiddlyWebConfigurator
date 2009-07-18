@@ -1,10 +1,11 @@
-var tiddlyweb;
+var tiddlyweb = {
+	host: "http://localhost:8080" // XXX: DEBUG
+};
+
 
 (function() {
 
-var host = "http://localhost:8080"; // XXX: hardcoded
-
-tiddlyweb = {
+tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 	saveEntities: function(obj) {
 		for(var bag in obj.bags) {
 			this.saveBag(bag, obj.bags[bag]);
@@ -19,7 +20,7 @@ tiddlyweb = {
 	 * on error, callback is passed XHR, "error" and the error
 	 */
 	loadBag: function(name, callback) {
-		var uri = host + "/bags/" + encodeURIComponent(name);
+		var uri = this.host + "/bags/" + encodeURIComponent(name);
 		callback = console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
@@ -29,7 +30,7 @@ tiddlyweb = {
 	 * on error, callback is passed XHR, "error" and the error
 	 */
 	loadRecipe: function(name, callback) {
-		var uri = host + "/recipes/" + encodeURIComponent(name);
+		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		callback = console.log; // XXX: DEBUG
 		var _callback = function(data, status, error) {
 			// simplify data by removing filters (currently unsupported)
@@ -47,7 +48,7 @@ tiddlyweb = {
 	 * each an array of users/roles
 	 */
 	saveBag: function(name, policy) {
-		var uri = host + "/bags/" + encodeURIComponent(name);
+		var uri = this.host + "/bags/" + encodeURIComponent(name);
 		var data = {
 			policy: policy
 		};
@@ -59,7 +60,7 @@ tiddlyweb = {
 	 * filters currently unsupported
 	 */
 	saveRecipe: function(name, bags) {
-		var uri = host + "/recipes/" + encodeURIComponent(name);
+		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		var data = {
 			recipe: []
 		};
@@ -68,7 +69,7 @@ tiddlyweb = {
 		}
 		saveData(uri, data, console.log);
 	}
-};
+});
 
 var loadData = function(uri, callback) {
 	localAjax({ // TODO: use getJSON
