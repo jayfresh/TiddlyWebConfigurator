@@ -1,22 +1,33 @@
 var tiddlyweb = {
-	host: "http://localhost:8080" // XXX: hardcoded
+	host: "" // defaults to current domain -- XXX: lacks server_prefix
 };
 
 (function() {
 
 tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
-	saveEntities: function(obj) {
-		for(var bag in obj.bags) {
-			this.saveBag(bag, obj.bags[bag]);
-		}
-		for(var recipe in obj.recipes) {
-			this.saveRecipe(recipe, obj.recipes[recipe]);
-		}
+	/*
+	 * entity has members type ("bag" or "recipe") and name
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
+	 */
+	loadTiddlers: function(entity, callback) {// TODO: use "resource" instead of "entity" throughout?
+		var uri = this.host + "/" + entity.type + "s/" +
+			encodeURIComponent(entity.name) + "/tiddlers"
+		callback = console.log; // XXX: DEBUG
+		// simplify data by only returning titles
+		var _callback = function(data, status, error) {
+			var tiddlers = [];
+			for(var i = 0; i < data.length; i++) {
+				tiddlers.push(data[i].title);
+			}
+			callback(tiddlers);
+		};
+		loadData(uri, _callback);
 	},
 
 	/*
-	 * on success, callback is passed data and "success"
-	 * on error, callback is passed XHR, "error" and the error
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
 	 */
 	loadBag: function(name, callback) {
 		var uri = this.host + "/bags/" + encodeURIComponent(name);
@@ -25,14 +36,14 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 	},
 
 	/*
-	 * on success, callback is passed data and "success"
-	 * on error, callback is passed XHR, "error" and the error
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
 	 */
 	loadRecipe: function(name, callback) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		callback = console.log; // XXX: DEBUG
+		// simplify data by removing filters (currently unsupported)
 		var _callback = function(data, status, error) {
-			// simplify data by removing filters (currently unsupported)
 			var bags = [];
 			for(var i = 0; i < data.recipe.length; i++) { // TODO: error handling
 				bags.push(data.recipe[i][0]);
@@ -42,6 +53,15 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 			callback(recipe);
 		};
 		loadData(uri, _callback);
+	},
+
+	saveEntities: function(obj) { // XXX: helper function belongs into configurator.js
+		for(var bag in obj.bags) {
+			this.saveBag(bag, obj.bags[bag]);
+		}
+		for(var recipe in obj.recipes) {
+			this.saveRecipe(recipe, obj.recipes[recipe]);
+		}
 	},
 
 	/*
