@@ -1,3 +1,10 @@
+/*
+ * TiddlyWeb adaptor
+ *
+ * TODO:
+ * * error handling in callbacks
+ */
+
 var tiddlyweb = {
 	host: "" // defaults to current domain -- XXX: lacks server_prefix
 };
@@ -16,10 +23,9 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 		callback = console.log; // XXX: DEBUG
 		// simplify data by only returning titles
 		var _callback = function(data, status, error) {
-			var tiddlers = [];
-			for(var i = 0; i < data.length; i++) {
-				tiddlers.push(data[i].title);
-			}
+			var tiddlers = data.map(function(item, i) {
+				return item.title;
+			});
 			callback(tiddlers);
 		};
 		loadData(uri, _callback);
@@ -44,10 +50,9 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 		callback = console.log; // XXX: DEBUG
 		// simplify data by removing filters (currently unsupported)
 		var _callback = function(data, status, error) {
-			var bags = [];
-			for(var i = 0; i < data.recipe.length; i++) { // TODO: error handling
-				bags.push(data.recipe[i][0]);
-			}
+			var bags = data.recipe.map(function(item, i) {
+				return item[0];
+			});
 			var recipe = {};
 			recipe[name] = bags;
 			callback(recipe);
@@ -82,12 +87,10 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 	 */
 	saveRecipe: function(name, bags) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
-		var data = {
-			recipe: []
-		};
-		for(var i = 0; i < bags.length; i++) {
-			data.recipe.push([bags[i], ""]);
-		}
+		var data = {};
+		data.recipe = bags.map(function(item, i) {
+			return [item, ""];
+		});
 		saveData(uri, data, console.log);
 	}
 });
