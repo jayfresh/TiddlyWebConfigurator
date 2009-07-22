@@ -9,9 +9,9 @@ var tiddlyweb = {
 	host: "" // defaults to current domain -- XXX: lacks server_prefix
 };
 
-(function() {
+(function($) {
 
-tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
+$.extend(tiddlyweb, {
 	/*
 	 * container has members type ("bag" or "recipe") and name
 	 * callback is passed data, status and error (if applicable)
@@ -96,7 +96,7 @@ tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 });
 
 var loadData = function(uri, callback) {
-	localAjax({ // TODO: use getJSON
+	localAjax({
 		url: uri,
 		type: "GET",
 		dataType: "json",
@@ -110,7 +110,7 @@ var saveData = function(uri, data, callback) {
 		url: uri,
 		type: "PUT",
 		dataType: "json",
-		data: YAHOO.lang.JSON.stringify(data),
+		data: $.toJSON(data),
 		complete: callback
 	});
 };
@@ -125,7 +125,7 @@ var localAjax = function(args) { // XXX: not required!?
 		window.netscape.security.PrivilegeManager.
 			enablePrivilege("UniversalBrowserRead");
 	}
-	return jQuery.ajax(args); // TODO: use YAHOO.util.Connect.asyncRequest
+	return jQuery.ajax(args);
 };
 
-})();
+})(jQuery);
