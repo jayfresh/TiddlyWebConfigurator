@@ -13,13 +13,13 @@ var tiddlyweb = {
 
 tiddlyweb = YAHOO.lang.merge(tiddlyweb, {
 	/*
-	 * entity has members type ("bag" or "recipe") and name
+	 * container has members type ("bag" or "recipe") and name
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
-	loadTiddlers: function(entity, callback) {// TODO: use "resource" instead of "entity" throughout?
-		var uri = this.host + "/" + entity.type + "s/" +
-			encodeURIComponent(entity.name) + "/tiddlers"
+	loadTiddlers: function(container, callback) {
+		var uri = this.host + "/" + container.type + "s/" +
+			encodeURIComponent(container.name) + "/tiddlers"
 		callback = console.log; // XXX: DEBUG
 		// simplify data by only returning titles
 		var _callback = function(data, status, error) {
