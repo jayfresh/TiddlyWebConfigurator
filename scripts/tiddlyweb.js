@@ -21,7 +21,7 @@ $.extend(tiddlyweb, {
 		var uri = this.host + "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers"
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, _callback);
+		loadData(uri, callback);
 	},
 
 	/*
@@ -61,7 +61,7 @@ $.extend(tiddlyweb, {
 	loadRecipe: function(name, callback) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, _callback);
+		loadData(uri, callback);
 	},
 
 	/*
