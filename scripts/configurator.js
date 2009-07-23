@@ -3,7 +3,12 @@ var layer = null;
 function configure() {
 	var v = getValue(layer);
 	var tw = convertFromWorkingToTiddlyWeb(v.working);
-	tiddlyweb.saveEntities(tw);
+	for(var bag in tw.bags) {
+		this.saveBag(bag, tw.bags[bag]);
+	}
+	for(var recipe in tw.recipes) {
+		this.saveRecipe(recipe, tw.recipes[recipe]);
+	}
 }
 
 function addExtraInput(container,name) {

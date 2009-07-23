@@ -1,5 +1,5 @@
 function init() {
-	try { // XXX: DEBUG [JRL: what does this mean FND?]
+	try { // XXX: DEBUG
 		tiddlyweb.host = "http://tiddlyweb.peermore.com/wiki";
 		var canvas = document.getElementById("canvas"); // TODO: use YUI selector?
 		layer = new WireIt.Layer({ parentEl: canvas });
