@@ -44,6 +44,22 @@ function addExtraTerminal(container,name,type) {
 	container.addTerminal(container.options.terminals[container.options.terminals.length-1]);
 }
 
+// n runs from 0 to N-1, where N is the number of items to be laid out
+function calculateVerticalLayout(n,offset,height) {
+	if(!offset) {
+		offset = {x:0,y:0};
+	}
+	var pos = {
+		x:offset.x,
+		y:offset.y
+	};
+	if(!height) {
+		height = 100;
+	}
+	pos.y += n*height;
+	return pos;
+}
+
 function addBag(bag, layer) {
 	bag = YAHOO.lang.merge(bag, { type: "bag" });
 	return addContainer(bag, layer);
