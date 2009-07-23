@@ -46,15 +46,15 @@ function addExtraTerminal(container,name,type) {
 
 function addBag(bag, layer) {
 	bag = YAHOO.lang.merge(bag, { type: "bag" });
-	return addEntity(bag, layer);
+	return addContainer(bag, layer);
 }
 
 function addRecipe(recipe, layer) {
 	recipe = YAHOO.lang.merge(recipe, { type: "recipe" });
-	return addEntity(recipe, layer);
+	return addContainer(recipe, layer);
 }
 
-function addEntity(obj, layer) {
+function addContainer(obj, layer) {
 	var x = obj.pos_x || 0;
 	var y = obj.pos_y || 0;
 	var permissions = ["write", "create", "delete", "manage", "accept"];
