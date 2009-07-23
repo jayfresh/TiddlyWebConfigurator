@@ -125,7 +125,8 @@ function addContainer(obj, layer) {
 		inputs: obj.type == "bag" ? permissions : ["tiddlers"],
 		outputs: [obj.type == "bag" ? "tiddlers" : "document"],
 		title: obj.name,
-		position: [x, y]
+		position: [x, y],
+		close: false
 	};
 	container = layer.addContainer(container);
 	container.type = obj.type;
@@ -135,7 +136,7 @@ function addContainer(obj, layer) {
 	return container;
 }
 
-// mainly nicked from WiringEditor
+// mainly nicked from WiringEditor.js
 function getValue(layer) {
 	var i;
 	var obj = {modules: [], wires: []};

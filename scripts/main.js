@@ -13,7 +13,7 @@ function init() {
 				tiddlyweb.loadRecipe(recipe,function() {
 					var recipeName = recipe;
 					return function(recipeObj) {
-						var recipeBags = recipeObj[recipeName];
+						var recipeBags = recipeObj.recipe;
 						var bag;
 						var wireConfig;
 						var moduleId = 0;
@@ -28,7 +28,7 @@ function init() {
 							bagId = lookupModule({
 								type:'bag',
 								options: {
-									title:recipeBags[i]
+									title:bag
 								}
 							},layer);
 							wireConfig = {
