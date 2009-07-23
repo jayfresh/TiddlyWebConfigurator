@@ -20,7 +20,7 @@ $.extend(tiddlyweb, {
 	loadTiddlers: function(container, callback) {
 		var uri = this.host + "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers"
-		callback = console.log; // XXX: DEBUG
+		callback = callback || console.log; // XXX: DEBUG
 		// simplify data by only returning titles
 		var _callback = function(data, status, error) {
 			var tiddlers = data.map(function(item, i) {
@@ -37,7 +37,7 @@ $.extend(tiddlyweb, {
 	 */
 	loadBags: function(callback) {
 		var uri = this.host + "/bags";
-		callback = console.log; // XXX: DEBUG
+		callback = callback || console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
 
@@ -47,7 +47,7 @@ $.extend(tiddlyweb, {
 	 */
 	loadBag: function(name, callback) {
 		var uri = this.host + "/bags/" + encodeURIComponent(name);
-		callback = console.log; // XXX: DEBUG
+		callback = callback || console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
 
@@ -57,7 +57,7 @@ $.extend(tiddlyweb, {
 	 */
 	loadRecipes: function(callback) {
 		var uri = this.host + "/recipes";
-		callback = console.log; // XXX: DEBUG
+		callback = callback || console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
 
@@ -67,7 +67,7 @@ $.extend(tiddlyweb, {
 	 */
 	loadRecipe: function(name, callback) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
-		callback = console.log; // XXX: DEBUG
+		callback = callback || console.log; // XXX: DEBUG
 		// simplify data by removing filters (currently unsupported)
 		var _callback = function(data, status, error) {
 			var bags = data.recipe.map(function(item, i) {
