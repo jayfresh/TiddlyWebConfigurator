@@ -65,6 +65,39 @@ function calculateVerticalLayout(n,offset,height) {
 	return pos;
 }
 
+function lookupModule(matchObj,layer) {
+	var container;
+	var match;
+	var matchObjects = function(obj1,obj2) {
+		for(var n in obj1) {
+			if(obj1.hasOwnProperty(n)) {
+				// ignore functions
+				if(typeof obj1[n]!=='function' && obj2[n]) {
+					if(typeof obj1[n]==='object') { // catches arrays and objects
+						if(!arguments.callee(obj1[n],obj2[n])) {
+							return false;
+						}
+					} else {
+						if(obj2[n]!==obj1[n]) {
+							return false;
+						}
+					}				
+				}
+			}
+		}
+		return true;
+	};
+	for(var i=0;i<layer.containers.length;i++) {
+		container = layer.containers[i];
+		match = null;
+		if(matchObjects(matchObj,container)) {
+			match = i;
+			break;
+		}
+	}
+	return match;
+}
+
 function addBag(bag, layer) {
 	bag = YAHOO.lang.merge(bag, { type: "bag" });
 	return addContainer(bag, layer);
