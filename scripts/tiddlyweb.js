@@ -21,13 +21,6 @@ $.extend(tiddlyweb, {
 		var uri = this.host + "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers"
 		callback = callback || console.log; // XXX: DEBUG
-		// simplify data by only returning titles -- XXX: belongs into configurator.js
-		var _callback = function(data, status, error) {
-			var tiddlers = data.map(function(item, i) {
-				return item.title;
-			});
-			callback(tiddlers);
-		};
 		loadData(uri, _callback);
 	},
 
@@ -68,15 +61,6 @@ $.extend(tiddlyweb, {
 	loadRecipe: function(name, callback) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		callback = callback || console.log; // XXX: DEBUG
-		// simplify data by removing filters (currently unsupported) -- XXX: belongs into configurator.js
-		var _callback = function(data, status, error) {
-			var bags = data.recipe.map(function(item, i) {
-				return item[0];
-			});
-			var recipe = {};
-			recipe[name] = bags;
-			callback(recipe);
-		};
 		loadData(uri, _callback);
 	},
 
@@ -99,9 +83,6 @@ $.extend(tiddlyweb, {
 	saveRecipe: function(name, bags) {
 		var uri = this.host + "/recipes/" + encodeURIComponent(name);
 		var data = {};
-		data.recipe = bags.map(function(item, i) {
-			return [item, ""];
-		});
 		saveData(uri, data, console.log);
 	}
 });

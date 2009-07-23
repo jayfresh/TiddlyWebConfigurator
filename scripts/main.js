@@ -24,7 +24,7 @@ function init() {
 							}
 						},layer);
 						for(var i=0;i<recipeBags.length;i++) {
-							bag = recipeBags[i];
+							bag = recipeBags[i][0];
 							bagId = lookupModule({
 								type:'bag',
 								options: {

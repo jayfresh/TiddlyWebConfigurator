@@ -3,10 +3,18 @@ var layer = null;
 function configure() {
 	var v = getValue(layer);
 	var tw = convertFromWorkingToTiddlyWeb(v.working);
-	for(var bag in tw.bags) {
+	saveEntities(tw.bags, tw.recipes);
+}
+
+function saveEntities(bags, recipes) {
+	for(var bag in bags) {
 		this.saveBag(bag, tw.bags[bag]);
 	}
-	for(var recipe in tw.recipes) {
+	for(var recipe in recipes) {
+		// add filters
+		recipe = recipe.map(function(item, i) {
+			return [item, ""];
+		});
 		this.saveRecipe(recipe, tw.recipes[recipe]);
 	}
 }
