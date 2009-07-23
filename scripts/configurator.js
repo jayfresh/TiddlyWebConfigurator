@@ -1,23 +1,145 @@
 var layer = null;
 
-function configure() {
-	var v = getValue(layer);
-	var tw = convertFromWorkingToTiddlyWeb(v.working);
-	saveEntities(tw.bags, tw.recipes);
+/* LOAD FROM TIDDLYWEB */
+
+function lookupModule(matchObj,layer) {
+	var container;
+	var match;
+	var matchObjects = function(obj1,obj2) {
+		for(var n in obj1) {
+			if(obj1.hasOwnProperty(n)) {
+				// ignore functions
+				if(typeof obj1[n]!=='function' && obj2[n]) {
+					if(typeof obj1[n]==='object') { // catches arrays and objects
+						if(!arguments.callee(obj1[n],obj2[n])) {
+							return false;
+						}
+					} else {
+						if(obj2[n]!==obj1[n]) {
+							return false;
+						}
+					}				
+				}
+			}
+		}
+		return true;
+	};
+	for(var i=0;i<layer.containers.length;i++) {
+		container = layer.containers[i];
+		match = null;
+		if(matchObjects(matchObj,container)) {
+			match = i;
+			break;
+		}
+	}
+	return match;
 }
 
-function saveEntities(bags, recipes) {
-	for(var bag in bags) {
-		this.saveBag(bag, tw.bags[bag]);
-	}
-	for(var recipe in recipes) {
-		// add filters
-		recipe = recipe.map(function(item, i) {
-			return [item, ""];
-		});
-		this.saveRecipe(recipe, tw.recipes[recipe]);
-	}
+function loadFromTiddlyWeb() {
+	var addRecipes = function(recipes) {
+		var recipe;
+		var pos;
+		for(var i=0;i<recipes.length;i++) {
+			recipe = recipes[i];
+			pos = calculateVerticalLayout(i,{x:700,y:400},150);
+			addRecipe({ name: recipe, pos_x: pos.x, pos_y: pos.y }, layer);
+			tiddlyweb.loadRecipe(recipe,function() {
+				var recipeName = recipe;
+				return function(recipeObj) {
+					var recipeBags = recipeObj.recipe;
+					var bag;
+					var wireConfig;
+					var moduleId = 0;
+					var recipeId = lookupModule({
+						type:'recipe',
+						options: {
+							title:recipeName
+						}
+					},layer);
+					for(var i=0;i<recipeBags.length;i++) {
+						bag = recipeBags[i][0];
+						bagId = lookupModule({
+							type:'bag',
+							options: {
+								title:bag
+							}
+						},layer);
+						wireConfig = {
+							src: { moduleId: bagId, terminal: "tiddlers"},
+							tgt: { moduleId: recipeId, terminal: "tiddlers" }
+						};
+						layer.addWire(wireConfig,layer);
+					}
+				}
+			}());
+		}
+	};
+	var addBags = function(bags) {
+		var bag;
+		var pos;
+		for(var i=0;i<bags.length;i++) {
+			bag = bags[i];
+			pos = calculateVerticalLayout(i,{x:400,y:0},250);
+			addBag({ name: bag, pos_x: pos.x, pos_y: pos.y}, layer);
+		}
+		tiddlyweb.loadRecipes(addRecipes);
+	};
+	tiddlyweb.loadBags(addBags);
 }
+
+/* end of LOAD FROM TIDDLYWEB */
+
+/* ADDING MODULES */
+
+// n runs from 0 to N-1, where N is the number of items to be laid out
+function calculateVerticalLayout(n,offset,height) {
+	if(!offset) {
+		offset = {x:0,y:0};
+	}
+	var pos = {
+		x:offset.x,
+		y:offset.y
+	};
+	if(!height) {
+		height = 100;
+	}
+	pos.y += n*height;
+	return pos;
+}
+
+function addBag(bag, layer) {
+	bag = YAHOO.lang.merge(bag, { type: "bag" });
+	return addContainer(bag, layer);
+}
+
+function addRecipe(recipe, layer) {
+	recipe = YAHOO.lang.merge(recipe, { type: "recipe" });
+	return addContainer(recipe, layer);
+}
+
+function addContainer(obj, layer) {
+	var x = obj.pos_x || 0;
+	var y = obj.pos_y || 0;
+	var permissions = ["write", "create", "delete", "manage", "accept"];
+	var container = {
+		xtype: "WireIt.InOutContainer",
+		inputs: obj.type == "bag" ? permissions : ["tiddlers"],
+		outputs: [obj.type == "bag" ? "tiddlers" : "document"],
+		title: obj.name,
+		position: [x, y],
+		close: false
+	};
+	container = layer.addContainer(container);
+	container.type = obj.type;
+	var el = container.el;
+	el.title = obj.desc || ""; // XXX: don't use title? -- XXX: use setAttribute?
+	YAHOO.util.Dom.addClass(el, obj.type);
+	return container;
+}
+
+/* ADDING MODULES */
+
+/* AUTO-RESIZE OF InOut MODULES */
 
 function addExtraInput(container,name) {
 	addExtraTerminal(container,name,"input");
@@ -57,83 +179,27 @@ function addExtraTerminal(container,name,type) {
 	container.addTerminal(container.options.terminals[container.options.terminals.length-1]);
 }
 
-// n runs from 0 to N-1, where N is the number of items to be laid out
-function calculateVerticalLayout(n,offset,height) {
-	if(!offset) {
-		offset = {x:0,y:0};
+/* end of AUTO-RESIZE OF InOut MODULES */
+
+/* SAVING TO TIDDLYWEB */
+
+function configure() {
+	var v = getValue(layer);
+	var tw = convertFromWorkingToTiddlyWeb(v.working);
+	saveEntities(tw.bags, tw.recipes);
+}
+
+function saveEntities(bags, recipes) {
+	for(var bag in bags) {
+		this.saveBag(bag, tw.bags[bag]);
 	}
-	var pos = {
-		x:offset.x,
-		y:offset.y
-	};
-	if(!height) {
-		height = 100;
+	for(var recipe in recipes) {
+		// add filters
+		recipe = recipe.map(function(item, i) {
+			return [item, ""];
+		});
+		this.saveRecipe(recipe, tw.recipes[recipe]);
 	}
-	pos.y += n*height;
-	return pos;
-}
-
-function lookupModule(matchObj,layer) {
-	var container;
-	var match;
-	var matchObjects = function(obj1,obj2) {
-		for(var n in obj1) {
-			if(obj1.hasOwnProperty(n)) {
-				// ignore functions
-				if(typeof obj1[n]!=='function' && obj2[n]) {
-					if(typeof obj1[n]==='object') { // catches arrays and objects
-						if(!arguments.callee(obj1[n],obj2[n])) {
-							return false;
-						}
-					} else {
-						if(obj2[n]!==obj1[n]) {
-							return false;
-						}
-					}				
-				}
-			}
-		}
-		return true;
-	};
-	for(var i=0;i<layer.containers.length;i++) {
-		container = layer.containers[i];
-		match = null;
-		if(matchObjects(matchObj,container)) {
-			match = i;
-			break;
-		}
-	}
-	return match;
-}
-
-function addBag(bag, layer) {
-	bag = YAHOO.lang.merge(bag, { type: "bag" });
-	return addContainer(bag, layer);
-}
-
-function addRecipe(recipe, layer) {
-	recipe = YAHOO.lang.merge(recipe, { type: "recipe" });
-	return addContainer(recipe, layer);
-}
-
-function addContainer(obj, layer) {
-	var x = obj.pos_x || 0;
-	var y = obj.pos_y || 0;
-	var permissions = ["write", "create", "delete", "manage", "accept"];
-	var container = {
-		xtype: "WireIt.InOutContainer",
-		inputs: obj.type == "bag" ? permissions : ["tiddlers"],
-		outputs: [obj.type == "bag" ? "tiddlers" : "document"],
-		title: obj.name,
-		position: [x, y],
-		close: false
-	};
-	container = layer.addContainer(container);
-	container.type = obj.type;
-	var el = container.el;
-	el.title = obj.desc || ""; // XXX: don't use title? -- XXX: use setAttribute?
-	YAHOO.util.Dom.addClass(el, obj.type);
-	return container;
 }
 
 // mainly nicked from WiringEditor.js
@@ -241,3 +307,5 @@ function convertFromWorkingToTiddlyWeb(working) {
 	}
 	return tiddlyweb;
 }
+
+/* end of SAVING TO TIDDLYWEB */
