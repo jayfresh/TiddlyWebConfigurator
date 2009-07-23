@@ -35,8 +35,28 @@ $.extend(tiddlyweb, {
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
+	loadBags: function(callback) {
+		var uri = this.host + "/bags";
+		callback = console.log; // XXX: DEBUG
+		loadData(uri, callback);
+	},
+
+	/*
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
+	 */
 	loadBag: function(name, callback) {
 		var uri = this.host + "/bags/" + encodeURIComponent(name);
+		callback = console.log; // XXX: DEBUG
+		loadData(uri, callback);
+	},
+
+	/*
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
+	 */
+	loadRecipes: function(callback) {
+		var uri = this.host + "/recipes";
 		callback = console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
