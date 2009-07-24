@@ -23,6 +23,7 @@
 		}
 
 		.collection {
+			overflow: auto; /* contain floats */
 			background-color: #E4E4E4;
 		}
 
@@ -38,8 +39,10 @@
 			background-color: #EEC6E6;
 		}
 
-		#recipes .collection {
-			margin: 5px 0 0 5px;
+		.listing {
+			float: left;
+			margin: 10px;
+			list-style-type: none;
 		}
 	</style>
 </head>
@@ -54,19 +57,42 @@
 
 		<div id="recipes" class="collection container">
 			<h2>Recipes</h2>
+			<ul class="listing">
+				<li><i>(none)</i></li>
+				<li>website</li>
+				<li>CMS</li>
+				<li>wiki</li>
+			</ul>
+
 			<div id="recipe" class="entity">
 				<h3>$recipe</h3>
 
 				<div id="bags" class="collection container">
 					<h2>Bags</h2>
+					<ul class="listing">
+						<li><i>(all)</i></li>
+						<li>public</li>
+						<li>editors</li>
+						<li>team</li>
+						<li>system</li>
+					</ul>
+
 					<div id="bag" class="entity">
 						<h3>$bag</h3>
 
 						<div id="tiddlers" class="collection">
 							<h2>Tiddlers</h2>
+							<ul class="listing">
+								<li>Foo</li>
+								<li>Bar</li>
+								<li>Baz</li>
+							</ul>
+
 							<div id="tiddler" class="entity">
 								<h3>$tiddler</h3>
-
+								<p>
+									Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+								</p>
 							</div>
 						</div>
 
