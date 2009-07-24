@@ -29,6 +29,11 @@
 			padding: 2px 5px;
 		}
 
+		#status dt,
+		#status dd {
+			display: inline;
+		}
+
 		.collection {
 			overflow: auto; /* contain floats */
 			background-color: #E4E4E4;
@@ -73,12 +78,12 @@
 
 		/* formatting */
 
-		#status {
-			font-weight: bold;
+		#status dt {
+			font-weight: normal;
 		}
 
-		#status .type {
-			font-weight: normal;
+		#status dd {
+			font-weight: bold;
 		}
 	</style>
 </head>
@@ -87,10 +92,12 @@
 
 	<div id="explorer">
 
-		<div id="status">
-			<span class="type">user</span> $user
-			<span class="type">server</span> $host
-		</div>
+		<dl id="status">
+			<dt>user</dt>
+			<dd>$user</dd>
+			<dt>server</dt>
+			<dd>$host</dd>
+		</dl>
 
 		<div id="recipes" class="collection container">
 			<h2>Recipes</h2>
