@@ -1,0 +1,83 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<title>TiddlyRecon</title>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		html,
+		body {
+			background-color: #FFF;
+		}
+
+		#explorer {
+			width: 90%;
+			margin: 10px auto;
+			border: 1px solid #000;
+			background-color: #FFF;
+		}
+
+		.collection {
+			background-color: #E4E4E4;
+		}
+
+		.entity {
+			background-color: #FFF;
+		}
+
+		#recipe {
+			background-color: #B7CAEB;
+		}
+
+		#bag {
+			background-color: #EEC6E6;
+		}
+
+		#recipes .collection {
+			margin: 5px 0 0 5px;
+		}
+	</style>
+</head>
+
+<body>
+
+	<div id="explorer">
+
+		<div id="status">
+			$host | $user
+		</div>
+
+		<div id="recipes" class="collection container">
+			<h2>Recipes</h2>
+			<div id="recipe" class="entity">
+				<h3>$recipe</h3>
+
+				<div id="bags" class="collection container">
+					<h2>Bags</h2>
+					<div id="bag" class="entity">
+						<h3>$bag</h3>
+
+						<div id="tiddlers" class="collection">
+							<h2>Tiddlers</h2>
+							<div id="tiddler" class="entity">
+								<h3>$tiddler</h3>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+</body>
+
+</html>
