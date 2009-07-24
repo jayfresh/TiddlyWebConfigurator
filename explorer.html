@@ -34,6 +34,12 @@
 			display: inline;
 		}
 
+		.collection,
+		.entity {
+			border: 1px solid #000;
+			border-width: 1px 0 0 1px;
+		}
+
 		.collection {
 			overflow: auto; /* contain floats */
 			background-color: #E4E4E4;
@@ -54,6 +60,10 @@
 			margin-left: -10px; /* neutralize gutter */
 		}
 
+		#recipes {
+			margin: -1px 0 0 -1px; /* collapse double margins */
+		}
+
 		#recipe {
 			background-color: #B7CAEB;
 		}
@@ -64,7 +74,7 @@
 
 		.listing {
 			float: left;
-			margin: 10px;
+			margin: 1px 10px 10px; /* top margin compensates for childrends' negative margin */
 			list-style-type: none;
 		}
 
