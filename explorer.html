@@ -15,6 +15,8 @@
 			background-color: #FFF;
 		}
 
+		/* structure */
+
 		#explorer {
 			width: 90%;
 			margin: 10px auto;
@@ -22,9 +24,18 @@
 			background-color: #FFF;
 		}
 
+		#status {
+			border-bottom: 1px solid #000;
+			padding: 2px 5px;
+		}
+
 		.collection {
 			overflow: auto; /* contain floats */
 			background-color: #E4E4E4;
+		}
+
+		.collection h2 {
+			margin: 5px;
 		}
 
 		.entity {
@@ -34,6 +45,7 @@
 		}
 
 		.entity h3 {
+			margin: 5px;
 			margin-left: -10px; /* neutralize gutter */
 		}
 
@@ -50,6 +62,24 @@
 			margin: 10px;
 			list-style-type: none;
 		}
+
+		.listing li {
+			width: 5em;
+			margin-top: -1px; /* collapse double margins */
+			border: 1px solid #000;
+			padding: 1px 5px;
+			background-color: #FFF;
+		}
+
+		/* formatting */
+
+		#status {
+			font-weight: bold;
+		}
+
+		#status .type {
+			font-weight: normal;
+		}
 	</style>
 </head>
 
@@ -58,7 +88,8 @@
 	<div id="explorer">
 
 		<div id="status">
-			$host | $user
+			<span class="type">user</span> $user
+			<span class="type">server</span> $host
 		</div>
 
 		<div id="recipes" class="collection container">
