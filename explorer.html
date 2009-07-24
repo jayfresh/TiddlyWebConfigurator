@@ -28,7 +28,13 @@
 		}
 
 		.entity {
+			overflow: auto; /* contain surrounding floats -- XXX: x-browser issues? */
+			padding-left: 15px; /* gutter */
 			background-color: #FFF;
+		}
+
+		.entity h3 {
+			margin-left: -10px; /* neutralize gutter */
 		}
 
 		#recipe {
