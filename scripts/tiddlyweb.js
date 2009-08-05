@@ -6,7 +6,7 @@
  */
 
 var tiddlyweb = {
-	host: "" // defaults to current domain -- XXX: lacks server_prefix
+	host: "" // defaults to current domain -- XXX: lacks server_prefix -- TODO: document; expects no trailing slash
 };
 
 (function($) {
@@ -20,6 +20,17 @@ $.extend(tiddlyweb, {
 	loadTiddlers: function(container, callback) {
 		var uri = this.host + "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers"
+		callback = callback || console.log; // XXX: DEBUG
+		loadData(uri, callback);
+	},
+
+	/*
+	 * callback is passed data, status and error (if applicable)
+	 * see jQuery.ajax for details
+	 */
+	loadTiddler: function(name, container, callback) {
+		var uri = this.host + "/" + container.type + "s/" +
+			encodeURIComponent(container.name) + "/tiddlers/" + name
 		callback = callback || console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
