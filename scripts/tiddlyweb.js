@@ -28,9 +28,10 @@ $.extend(tiddlyweb, {
 	 * callback is passed data, status and error (if applicable)
 	 * see jQuery.ajax for details
 	 */
-	loadTiddler: function(name, container, callback) {
+	loadTiddler: function(title, container, callback) {
 		var uri = this.host + "/" + container.type + "s/" +
-			encodeURIComponent(container.name) + "/tiddlers/" + name
+			encodeURIComponent(container.name) + "/tiddlers/" +
+			encodeURIComponent(title)
 		callback = callback || console.log; // XXX: DEBUG
 		loadData(uri, callback);
 	},
