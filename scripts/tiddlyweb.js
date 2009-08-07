@@ -18,10 +18,10 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadTiddlers: function(container, callback) {
-		var uri = this.host + "/" + container.type + "s/" +
+		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers"
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -29,11 +29,11 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadTiddler: function(title, container, callback) {
-		var uri = this.host + "/" + container.type + "s/" +
+		var uri = "/" + container.type + "s/" +
 			encodeURIComponent(container.name) + "/tiddlers/" +
 			encodeURIComponent(title)
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -41,9 +41,9 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadBags: function(callback) {
-		var uri = this.host + "/bags";
+		var uri = "/bags";
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -51,9 +51,9 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadBag: function(name, callback) {
-		var uri = this.host + "/bags/" + encodeURIComponent(name);
+		var uri = "/bags/" + encodeURIComponent(name);
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -61,9 +61,9 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadRecipes: function(callback) {
-		var uri = this.host + "/recipes";
+		var uri = "/recipes";
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -71,9 +71,9 @@ $.extend(tiddlyweb, {
 	 * see jQuery.ajax for details
 	 */
 	loadRecipe: function(name, callback) {
-		var uri = this.host + "/recipes/" + encodeURIComponent(name);
+		var uri = "/recipes/" + encodeURIComponent(name);
 		callback = callback || console.log; // XXX: DEBUG
-		loadData(uri, callback);
+		this.loadData(uri, callback);
 	},
 
 	/*
@@ -81,11 +81,11 @@ $.extend(tiddlyweb, {
 	 * each an array of users/roles
 	 */
 	saveBag: function(name, policy) {
-		var uri = this.host + "/bags/" + encodeURIComponent(name);
+		var uri = "/bags/" + encodeURIComponent(name);
 		var data = {
 			policy: policy
 		};
-		saveData(uri, data, console.log);
+		this.saveData(uri, data, console.log);
 	},
 
 	/*
@@ -93,31 +93,33 @@ $.extend(tiddlyweb, {
 	 * filters currently unsupported
 	 */
 	saveRecipe: function(name, bags) {
-		var uri = this.host + "/recipes/" + encodeURIComponent(name);
+		var uri = "/recipes/" + encodeURIComponent(name);
 		var data = {};
-		saveData(uri, data, console.log);
+		this.saveData(uri, data, console.log);
+	},
+
+	// generic utility methods
+
+	loadData: function(uri, callback) {
+		localAjax({
+			url: this.host + uri,
+			type: "GET",
+			dataType: "json",
+			success: callback,
+			error: callback
+		});
+	},
+
+	saveData: function(uri, data, callback) {
+		localAjax({
+			url: this.host + uri,
+			type: "PUT",
+			dataType: "json",
+			data: $.toJSON(data),
+			complete: callback
+		});
 	}
 });
-
-var loadData = function(uri, callback) {
-	localAjax({
-		url: uri,
-		type: "GET",
-		dataType: "json",
-		success: callback,
-		error: callback
-	});
-};
-
-var saveData = function(uri, data, callback) {
-	localAjax({
-		url: uri,
-		type: "PUT",
-		dataType: "json",
-		data: $.toJSON(data),
-		complete: callback
-	});
-};
 
 /*
  * enable AJAX calls from a local file
