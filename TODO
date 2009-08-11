@@ -1,3 +1,5 @@
 * buttons for creating/modifying entities
 * display entity details
 * use fragment identifiers for pre-selecting entities
+* error handling
+* ETag handling

@@ -126,7 +126,7 @@ $.extend(tiddlyweb, {
  * triggers regular jQuery.ajax call after requesting enhanced privileges
  */
 var localAjax = function(args) { // XXX: not required!?
-	if(document.location.protocol.indexOf("http") == -1 && window.Components &&
+	if(document.location.protocol.indexOf("file") == 0 && window.Components &&
 		window.netscape && window.netscape.security) {
 		window.netscape.security.PrivilegeManager.
 			enablePrivilege("UniversalBrowserRead");
