@@ -3,7 +3,8 @@ TiddlyWebConfigurator
 visual configuration of bags and recipes
 
 N.B.:
-This repository includes WireIt as a submodule:
+This repository includes chrjs and WireIt as submodules:
+    http://github.com/tiddlyweb/chrjs
     http://github.com/neyric/wireit
 After cloning, run the following commands:
     $ git submodules init
