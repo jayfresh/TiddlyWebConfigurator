@@ -1,10 +1,2 @@
-TiddlyWebConfigurator
-
-visual configuration of bags and recipes
-
-N.B.:
-This repository includes chrjs as a submodule:
-    http://github.com/tiddlyweb/chrjs
-After cloning, run the following commands:
-    $ git submodules init
-    $ git submodules update
+TiddlyRecon has been moved to a separate repository:
+    http://github.com/FND/tiddlyrecon
